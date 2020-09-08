@@ -26,12 +26,12 @@ public class Main1717_집합의표현 {
 			int b = Integer.parseInt(st.nextToken());
 			
 			switch(input) {
-			case 0:
+			case 0:	
 				union(a,b);
 				break;
 			case 1:
-				if(find(a) == find(b)) System.out.println("YES");
-				else System.out.println("NO");
+				if(find(a) == find(b)) System.out.println("YES");	// 같은 집합이면 YES
+				else System.out.println("NO");	// 아니면 NO
 				break;
 			}
 			

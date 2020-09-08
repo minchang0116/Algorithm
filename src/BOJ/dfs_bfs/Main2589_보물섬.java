@@ -29,7 +29,7 @@ public class Main2589_보물섬 {
 		
 		Queue<int []> q = new LinkedList<int[]>();
 		int max=0;
-		for(int i=0; i<N; i++) {
+		for(int i=0; i<N; i++) { // 완전 탐색
 			for(int j=0; j<M; j++) {
 				if(map[i][j] == 'L') {
 					visited = new boolean[N][M];
