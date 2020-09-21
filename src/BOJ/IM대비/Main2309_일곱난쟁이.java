@@ -1,4 +1,4 @@
-package BOJ.브루트포스;
+package BOJ.IM대비;
 
 import java.io.BufferedReader;
 import java.io.IOException;
