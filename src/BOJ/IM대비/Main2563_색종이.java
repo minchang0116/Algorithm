@@ -20,7 +20,6 @@ public class Main2563_색종이 {
 					map[k][l] = 1;
 				}
 			}
-			
 		}
 		int cnt=0;
 		for(int i=0; i<100; i++) {
