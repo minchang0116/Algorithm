@@ -9,7 +9,7 @@ import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 
-public class Main1197_프림01 {
+public class Main1197_프림2 {
 	
 	static ArrayList<Edge> adjList[];
 	static int V, E;
@@ -39,26 +39,25 @@ public class Main1197_프림01 {
 	static int result;
 	private static void makeMST() {
 		int minEdge[] = new int[V+1];
-		Arrays.fill(minEdge, Integer.MAX_VALUE);
-		minEdge[1] = 0;
 		boolean visited[] = new boolean[V+1];
-		PriorityQueue<Vertex> pq = new PriorityQueue<Vertex>();
-		pq.add(new Vertex(1,0));
+		minEdge[1] = 0;
 		
+		PriorityQueue<Vertex> pq = new PriorityQueue<Main1197_프림2.Vertex>();
+		pq.add(new Vertex(1,0));
 		while(!pq.isEmpty()) {
 			Vertex v = pq.poll();
-			if(visited[v.no]== true) continue;
-			result += v.value;
+			if(visited[v.no]== true ) continue;
 			visited[v.no] = true;
 			
 			for(int i=0; i<adjList[v.no].size(); i++) {
 				Edge temp = adjList[v.no].get(i);
-				if(visited[temp.to] != true && minEdge[temp.to] > temp.value) {
-					minEdge[temp.to] = temp.value;
-					pq.add(new Vertex(temp.to, temp.value));
+				if(visited[temp.to] != true && minEdge[temp.to] > temp.value ) {
+					
 				}
 			}
+			
 		}
+		
 	}
 
 	
