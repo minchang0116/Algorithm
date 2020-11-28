@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
+// ㅎㅎ
 public class 키순서 {
 	static int map[][];
 	static int N;
