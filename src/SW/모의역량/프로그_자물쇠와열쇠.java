@@ -30,18 +30,38 @@ public class 프로그_자물쇠와열쇠 {
 			return answer;
 		}
     	for(int i=0; i<3; i++) {
-    		rotation();
+    		rotation(key, key1);
     		if(move(key1, lock1, key.length, lock.length)) {
     			return answer;
-    		}
+    		}  
     	}
     	answer = false;
         return answer;
     }
 
-	private static void rotation() {
-		// TODO Auto-generated method stub
+	private static void rotation(int[][] key, ArrayList<int[]> key1) {
+		key1.clear();
+		int tempKey[][] = new int [key.length][];
+		for(int i=0; i<key.length; i++) {
+			tempKey[i] = key[i].clone();
+		}
+		int a=0;
+		int b=0;
+		for(int j=0; j<tempKey[0].length; j++) {
+			for(int i=tempKey.length-1; i>=0; i--) {
+				key[a][b++] = tempKey[i][j];
+			}
+			b=0;
+			a++;
+		}
 		
+    	for(int i=0; i<key.length; i++) {
+    		for(int j=0; j<key.length; j++) {
+    			if(key[i][j] == 1) {
+    				key1.add(new int[] {i,j});
+    			}
+    		}
+    	}
 	}
 
 	private static boolean move(ArrayList<int[]> key1, ArrayList<int[]> lock1, int kl, int ll) {
@@ -60,6 +80,9 @@ public class 프로그_자물쇠와열쇠 {
 				for(int k=0; k<key1.size(); k++) {
 					key1.get(k)[1] += dir; // 오른쪽 or 왼쪽으로 한칸씩 이동
 				}
+			}
+			for(int k=0; k<key1.size(); k++) {
+				key1.get(k)[0]++; // 오른쪽 or 왼쪽으로 한칸씩 이동
 			}
 			dir *= -1;
 		}
