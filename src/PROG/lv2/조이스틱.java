@@ -29,9 +29,23 @@ public class 조이스틱 {
     
     // 'A'가 아닐때까지 왼쪽으로 가고, 거기서 다시 오른쪽으로 가는경우
     // 이렇게 쭉 왼쪽으로 가봄 
-	private void solve(int cur, String name) {
-		int cnt = cur;
-		for(int i=cur; i<name.length(); i++) {
+	private void solve(String name) {
+		
+		char arr[] = new char[name.length()];
+		for(int i=0; i<name.length(); i++) {
+			arr[i] = 'A';
+		}
+		// 오른쪽 갔다가 왼쪽 가는 경우
+		for(int i=0; i<name.length(); i++) {
+			arr[i] = name.charAt(i);
+			char temp[] = arr.clone();
+			for(int j=0; j<name.length(); j++) {
+				
+			}
+		}
+		
+		// 왼쪽 갔다가 오른쪽 가는 경우 
+		for(int i=0; i<name.length(); i++) {
 			
 		}
 	}
