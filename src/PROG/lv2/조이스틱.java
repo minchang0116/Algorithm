@@ -1,52 +1,25 @@
 package PROG.lv2;
 
+import java.util.Arrays;
+
 public class 조이스틱 {
 	public static void main(String[] args) {
 		조이스틱 service = new 조이스틱();
-		service.solution("JEROEN");
+		System.out.println(service.solution("JEROEN"));
 	}
     public int solution(String name) {
-    	boolean check[] = new boolean[name.length()];
     	int answer = 0;
-    	// 각 위치에서의 조이스틱 조작값
+    	int temp[] = new int[name.length()];
+    	boolean check[] = new boolean[temp.length];
     	for(int i=0; i<name.length(); i++) {
-    		if(name.charAt(i) == 'A') check[i] = true;
-    		int up = name.charAt(i) - 'A';
-    		int down = 'Z' - name.charAt(i) + 1;
-    		answer += Math.min(up, down);
+    		temp[i] = Math.min(name.charAt(i) - 'A', 'Z' - name.charAt(i) + 1);
+    		answer += temp[i];
     	}
     	
-    	// "JAAN" check[] = { false, true, true, false}
+    	temp[0] = 0;
     	
-    	solve(); // 모든 위치에서 오른쪽으로 가는것과 왼쪽으로 가는 것을 비교해서 가장 작은값을 뽑아낸다.
-    	
+    	// 오른쪽 갈지 왼쪽갈지
     	
         return answer;
     }
-    
-    // 'A가 아닐때까지 오른쪽으로 가고, 거기서 다시 왼쪽으로 가는 경우
-    // 이렇게 쭉 오른쪽으로 가봄
-    
-    // 'A'가 아닐때까지 왼쪽으로 가고, 거기서 다시 오른쪽으로 가는경우
-    // 이렇게 쭉 왼쪽으로 가봄 
-	private void solve(String name) {
-		
-		char arr[] = new char[name.length()];
-		for(int i=0; i<name.length(); i++) {
-			arr[i] = 'A';
-		}
-		// 오른쪽 갔다가 왼쪽 가는 경우
-		for(int i=0; i<name.length(); i++) {
-			arr[i] = name.charAt(i);
-			char temp[] = arr.clone();
-			for(int j=0; j<name.length(); j++) {
-				
-			}
-		}
-		
-		// 왼쪽 갔다가 오른쪽 가는 경우 
-		for(int i=0; i<name.length(); i++) {
-			
-		}
-	}
 }
