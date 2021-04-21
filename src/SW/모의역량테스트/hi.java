@@ -1,126 +1,186 @@
+package SW.모의역량테스트;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-public class 특이한자석sw {
-   static final int MAX = 8;
+public class hi {
+	int N, M, K;
+	int[] dy = { -1, -1, 0, 1, 1, 1, 0, -1 }; // 12시방향부터 시계방향
+	int[] dx = { 0, 1, 1, 1, 0, -1, -1, -1 };
+	Fireball[][] map;
+	int massLeft = 0; // 이동 완료 후 남은 질량
 
-   static class Wheel {
-      int curPos;
-      int data[];
+	class Fireball {
+		int mass; // 질량
+		int speed; // 속력
+		int dir; // 방향
+		boolean big; // 합쳐진건지
+		boolean hol; // 합쳐지는 파이어볼의 방향이 모두 홀
+		boolean jjack; // 합쳐지는 파이어볼의 방향이 모두 짝
+		int cnt; // 합쳐진 파이어볼의 개수
 
-      public Wheel() {
-         data = new int[MAX];
-      }
+		Fireball(int mass, int speed, int dir) {
+			this.mass = mass;
+			this.speed = speed;
+			this.dir = dir;
+			this.cnt = 1;
+		}
+	}
 
-      void moveL() {
-         curPos = (curPos + 1) % MAX;
-      }
+	public static void main(String[] args) throws Exception {
+		new hi().service();
+	}
 
-      void moveR() {
-         curPos = (curPos + 7) % MAX;
-      }
+	private void service() throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+		K = Integer.parseInt(st.nextToken());
+		map = new Fireball[N][N];
 
-      int getLeft() {
-         return data[(curPos + 6) % 8];
-      }
+		for (int i = 0; i < M; i++) {
+			st = new StringTokenizer(br.readLine());
+			int r = Integer.parseInt(st.nextToken()) - 1;
+			int c = Integer.parseInt(st.nextToken()) - 1;
+			int mass = Integer.parseInt(st.nextToken());
+			int speed = Integer.parseInt(st.nextToken());
+			int dir = Integer.parseInt(st.nextToken());
+			map[r][c] = new Fireball(mass, speed, dir);
+		}
 
-      int getRight() {
-         return data[(curPos + 2) % 8];
-      }
+		if (N == 0) {
+			System.out.println(0);
+			return;
+		}
 
-      int getValue() {
-         return data[curPos];
-      }
-   }
+		for (int i = 0; i < K; i++) {
+			move();
+		}
 
-   static final int R = 1;
-   static final int L = -1;
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < N; j++)
+				if (map[i][j] != null && map[i][j].big)
+					massLeft += map[i][j].mass / 5 * 4;
+				else if (map[i][j] != null)
+					massLeft += map[i][j].mass;
 
-   static final int WMAX = 4;
+		System.out.println(massLeft);
+	}
 
-   static class Simulator {
-      Wheel wheels[];
-      int chain[];
+	private void move() {
+		Fireball[][] afterMap = new Fireball[N][N];
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				if (map[i][j] != null && !map[i][j].big) {
+					int ny = i + dy[map[i][j].dir] * map[i][j].speed;
+					int nx = j + dx[map[i][j].dir] * map[i][j].speed;
+					if (ny < 0)
+						ny =  N-Math.abs(ny)%N;
+					else
+						ny = ny % N;
+					if (nx < 0)
+						nx =  N-Math.abs(nx)%N;
+					else
+						nx = nx % N;
 
-      public Simulator() {
-         wheels = new Wheel[WMAX];
-         for (int i = 0; i < WMAX; i++)
-            wheels[i] = new Wheel();
-         chain = new int[WMAX];
-      }
+					if (afterMap[ny][nx] != null) {
+						afterMap[ny][nx].big = true;
+						afterMap[ny][nx].mass += map[i][j].mass;
+						afterMap[ny][nx].speed += map[i][j].speed;
+						afterMap[ny][nx].cnt++;
+						if (afterMap[ny][nx].dir == 0 || afterMap[ny][nx].dir == 2 || afterMap[ny][nx].dir == 4
+								|| afterMap[ny][nx].dir == 6)
+							if (map[i][j].dir == 0 || map[i][j].dir == 2 || map[i][j].dir == 4 || map[i][j].dir == 6)
+								afterMap[ny][nx].jjack = true;
+							else
+								afterMap[ny][nx].jjack = false;
+						else if (afterMap[ny][nx].dir == 1 || afterMap[ny][nx].dir == 3 || afterMap[ny][nx].dir == 5
+								|| afterMap[ny][nx].dir == 7)
+							if (map[i][j].dir == 1 || map[i][j].dir == 3 || map[i][j].dir == 5 || map[i][j].dir == 7)
+								afterMap[ny][nx].hol = true;
+							else
+								afterMap[ny][nx].hol = false;
+					} else {
+						afterMap[ny][nx] = new Fireball(map[i][j].mass, map[i][j].speed, map[i][j].dir);
+					}
+				} else if (map[i][j] != null && map[i][j].big) { // 합쳐진 파이어볼이라면
+					int sMass = map[i][j].mass / 5; // 퍼지는 질량
+					if (sMass <= 0)
+						break;
+					int sSpeed = map[i][j].speed / map[i][j].cnt; // 퍼지는 속도
+//               int sSpeed = map[i][j].speed; // 퍼지는 속도
+					if (map[i][j].hol || map[i][j].jjack) {
+						for (int k = 0; k <= 6; k += 2) {
+							int ny = i + dy[k] * sSpeed;
+							int nx = j + dx[k] * sSpeed;
+							if (ny < 0)
+								ny =  N-Math.abs(ny)%N;
+							else
+								ny = ny % N;
+							if (nx < 0)
+								nx =  N-Math.abs(nx)%N;
+							else
+								nx = nx % N;
 
-      // 체이닝 여부 체크 Union집합 유사
-      private void chainChk() {
-         for (int i = 0; i < WMAX; i++)
-            chain[i] = i;
-         for (int i = 0; i < WMAX - 1; i++) {
-            if (wheels[i].getRight() != wheels[i + 1].getLeft()) {
-               chain[i + 1] = chain[i];
-            }
-         }
-      }
 
-      void rotateWheel(int move, int wIdx) {
-         chainChk();
-         int chk = chain[wIdx]; // 체이닝 값
-         for (int i = 0; i < WMAX; i++) {
-            if (chk == chain[i]) { // 체이닝 값이 같다면 회전
-               if (Math.abs(wIdx - i) % 2 == 0) { // 같은 방향으로 회전
-                  moveWheel(move, i);
-               } else { // 반대 방향으로 회전
-                  moveWheel(move * -1, i);
-               }
-            }
-         }
-      }
+							if (afterMap[ny][nx] != null) {
+								afterMap[ny][nx].big = true;
+								afterMap[ny][nx].mass += sMass;
+								afterMap[ny][nx].speed += sSpeed;
+								afterMap[ny][nx].cnt++;
+								if (afterMap[ny][nx].dir == 0 || afterMap[ny][nx].dir == 2 || afterMap[ny][nx].dir == 4
+										|| afterMap[ny][nx].dir == 6)
+									afterMap[ny][nx].jjack = true;
+								else {
+									afterMap[ny][nx].jjack = false;
+									afterMap[ny][nx].hol = false;
+								}
+							} else {
+								afterMap[ny][nx] = new Fireball(sMass, sSpeed, k);
+							}
+						}
+					} else {
+						for (int k = 1; k <= 7; k += 2) {
+							int ny = i + dy[k] * sSpeed;
+							int nx = j + dx[k] * sSpeed;
+							if (ny < 0)
+								ny =  N-Math.abs(ny)%N;
+							else
+								ny = ny % N;
+							if (nx < 0)
+								nx =  N-Math.abs(nx)%N;
+							else
+								nx = nx % N;
 
-      void moveWheel(int move, int wIdx) {
-         if (move == R)
-            wheels[wIdx].moveR();
-         else
-            wheels[wIdx].moveL();
 
-      }
-
-      int getValue() {
-         int val = 0;
-         for (int i = 0; i < WMAX; i++) {
-            val += wheels[i].getValue() << i;
-         }
-         return val;
-      }
-   }
-
-   static int Tcase;
-   static int K;
-   static Simulator simulator;
-
-   public static void main(String[] args) throws Exception {
-      BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-      StringBuilder out = new StringBuilder();
-      Tcase = Integer.parseInt(in.readLine().trim());
-      for (int t = 1; t <= Tcase; t++) {
-         simulator = new Simulator();
-         K = Integer.parseInt(in.readLine().trim());
-         for (int i = 0; i < WMAX; i++) {
-            StringTokenizer st = new StringTokenizer(in.readLine());
-            for (int j = 0; j < MAX; j++) {
-               simulator.wheels[i].data[j] = Integer.parseInt(st.nextToken());
-            }
-         }
-
-         for (int i = 0; i < K; i++) {
-            StringTokenizer st = new StringTokenizer(in.readLine());
-            int wIdx = Integer.parseInt(st.nextToken());
-            int move = Integer.parseInt(st.nextToken());
-            simulator.rotateWheel(move, wIdx - 1);
-         }
-
-         int ans = 0;
-         ans = simulator.getValue();
-         out.append('#').append(t).append(' ').append(ans).append('\n');
-      }
-      System.out.print(out);
-   }
+							if (afterMap[ny][nx] != null) {
+								afterMap[ny][nx].big = true;
+								afterMap[ny][nx].mass += sMass;
+								afterMap[ny][nx].speed += sSpeed;
+								afterMap[ny][nx].cnt++;
+								if (afterMap[ny][nx].dir == 1 || afterMap[ny][nx].dir == 3 || afterMap[ny][nx].dir == 5
+										|| afterMap[ny][nx].dir == 7)
+									afterMap[ny][nx].hol = true;
+								else {
+									afterMap[ny][nx].jjack = false;
+									afterMap[ny][nx].hol = false;
+								}
+							} else {
+								afterMap[ny][nx] = new Fireball(sMass, sSpeed, k);
+							}
+						}
+					}
+				}
+			}
+		}
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < N; j++) {
+				map[i][j] = null;
+//            if (afterMap[i][j] != null && afterMap[i][j].big)
+//               afterMap[i][j].speed = afterMap[i][j].speed / afterMap[i][j].cnt;
+				map[i][j] = afterMap[i][j];
+			}
+	}
 }

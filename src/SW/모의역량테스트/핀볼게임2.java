@@ -122,9 +122,6 @@ public class 핀볼게임2 {
 			System.out.println("#"+test_case+" "+maxScore);
 		}
 	}
-	
-	
-
 
 	static class Point{
 		int x;

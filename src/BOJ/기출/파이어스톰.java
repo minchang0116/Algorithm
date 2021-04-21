@@ -64,6 +64,10 @@ public class 파이어스톰 {
 				curC += fireLength;
 			}
 			
+			for(int i=0; i<rcLength; i++) {
+				map[i] = nextMap[i].clone();
+			}
+			
 			// 인접한 얼음이 2개이하면 1씩 감소
 			for(int i=0; i<rcLength; i++) {
 				for(int j=0; j<rcLength; j++) {
@@ -75,7 +79,9 @@ public class 파이어스톰 {
 							if(nr < 0 || nr >= rcLength || nc <0 || nc>=rcLength) {
 								continue;
 							}
-							if(nextMap[nr][nc] == 0) {
+							// map으로 비교하는 이유는 nextMap으로 비교할 시 밑에서 nextMap의 값을 바꾸기 때문에
+							// 잘못된 비교를 하게 됩니다.
+							if(map[nr][nc] == 0) {
 								continue;
 							}
 							cnt++;
@@ -87,10 +93,10 @@ public class 파이어스톰 {
 					}
 				}
 			}
-			
 			for(int i=0; i<rcLength; i++) {
 				map[i] = nextMap[i].clone();
 			}
+			
 		}
 		
 		
@@ -115,7 +121,7 @@ public class 파이어스톰 {
 		
 
 	}
-	static int ice;
+	static int ice=0;
 	static boolean check[][];
 	static void dfs(int i, int j, int rcLength) {
 		for(int d=0; d<4; d++) {
