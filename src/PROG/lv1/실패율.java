@@ -19,13 +19,6 @@ public class 실패율 {
 				continue;
 			}
 
-			
-			
-			
-			
-			
-			
-			
 			double fail = 0;
 			for (int i = 0; i < stages.length; i++) {
 				if (s+1 == stages[i]) {
