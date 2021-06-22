@@ -19,13 +19,7 @@ public class n진법뒤집기 {
         	}
         }
         
-        int answer = 0;
-        int powIdx = 0;
-        for(int i=number.length()-1; i>=0; i--) {
-        	answer += (number.charAt(i) - '0') * Math.pow(3, powIdx++);
-        }
-        
-        return answer;
+        return Integer.parseInt(number.toString(), 3);
     }
 	
 	
