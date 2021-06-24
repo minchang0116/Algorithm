@@ -1,7 +1,5 @@
 package PROG.lv1;
 
-import java.util.StringTokenizer;
-
 public class 다트게임 {
 	public static void main(String[] args) {
 		다트게임 service = new 다트게임();
