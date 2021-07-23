@@ -1,4 +1,4 @@
-package BOJ.MST;
+package BOJ.그래프;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -63,5 +63,4 @@ public class Main1197_크루스컬01 {
 			this.value = value;
 		}
 	}
-	
 }
